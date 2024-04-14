@@ -39,6 +39,15 @@ app.get("/api/users",(req,res)=>{
   })
 })
 
+
+app.post("/api/users/:_id/exercises",(req,res)=>{
+let date = new Date();
+
+res.json({"_id":"id here","username":"irfan032","date":`${date}`,"duration":25,"description":"asad"})
+})
+
+
+
 mongoose.connect("mongodb://localhost:27017/exerciseTracker").then(result=>{
   console.log("connected to database");
   const listener = app.listen(process.env.PORT || 3000, () => {
