@@ -112,7 +112,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
 });
 
 mongoose
-  .connect("mongodb://localhost:27017/exerciseTracker")
+  .connect(process.env.MONGO_URI)
   .then((result) => {
     console.log("connected to database");
     const listener = app.listen(process.env.PORT || 3000, () => {
