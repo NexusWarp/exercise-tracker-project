@@ -39,11 +39,18 @@ app.get("/api/users",(req,res)=>{
   })
 })
 
-
+let date;
 app.post("/api/users/:_id/exercises",(req,res)=>{
-let date = new Date();
-
-res.json({"_id":"id here","username":"irfan032","date":`${date}`,"duration":25,"description":"asad"})
+if(req.body.date==""){
+  date = new Date();
+  
+}
+else{
+  date = new Date(req.body.date);
+  
+}
+console.log(req.body);
+res.json({"_id":"id here","username":"irfan032","date":`${date.toDateString()}`,"duration":25,"description":"asad"})
 })
 
 
