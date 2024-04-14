@@ -30,6 +30,15 @@ app.post("/api/users",(req,res)=>{
 
 })
 
+app.get("/api/users",(req,res)=>{
+  userModel.find().then(data=>{
+    console.log(data);
+    res.send(data)
+  }).catch(err=>{
+    res.json({error:err})
+  })
+})
+
 mongoose.connect("mongodb://localhost:27017/exerciseTracker").then(result=>{
   console.log("connected to database");
   const listener = app.listen(process.env.PORT || 3000, () => {
