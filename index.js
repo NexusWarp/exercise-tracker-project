@@ -9,12 +9,12 @@ const userSchema = new mongoose.Schema({
 });
 const userModel = mongoose.model("/user", userSchema);
 const exerSchema = new mongoose.Schema({
-  username: {type:mongoose.Schema.Types.ObjectId, ref:userModel} ,
+  username: { type: mongoose.Schema.Types.ObjectId, ref: userModel },
   description: { type: String, required: true },
-  duration:{ type: Number, required: true },
-  date:Date
+  duration: { type: Number, required: true },
+  date: Date,
 });
-const exerModel = mongoose.model("exercise",exerSchema);
+const exerModel = mongoose.model("exercise", exerSchema);
 
 app.use(cors());
 app.use(express.static("public"));
@@ -56,28 +56,59 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 
   userModel
     .findById(id)
-    .then((data) => {
+    .then((reslt) => {
       const newExer = new exerModel({
         username: id,
-        description:req.body.description,
-        duration:req.body.duration,
-        date:date.toDateString()
-      })
-      newExer.save().then(data=>{
-
-        res.json({
-          _id: "id here",
-          username: "irfan032",
-          date: `${date.toDateString()}`,
-          duration: 25,
-          description: "asad",
-        });
+        description: req.body.description,
+        duration: req.body.duration,
+        date: date,
       });
+      newExer
+        .save()
+        .then((data) => {
+          res.json({
+            _id: id,
+            username: reslt.username,
+            date: `${date.toDateString()}`,
+            duration: data.duration,
+            description: data.description,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
-      
+
     .catch((err) => {
       console.error(err);
     });
+});
+
+app.get("/api/users/:_id/logs", (req, res) => {
+  let id = req.params["_id"];
+  console.log(id);
+  userModel.findById(id).then((user) => {
+    exerModel.find({username:id}).then(data=>{
+      console.log(data);
+      let obj ={};
+      let array = [];
+      data.forEach(elem =>{
+        obj.description = elem.description,
+        obj.duration = elem.duration,
+        obj.date = elem.date.toDateString();
+        array.push(obj);
+      })
+      let count = data.length;
+
+
+
+      res.json({ _id: id, username: user.username, "count": count,"log":array });
+      
+    })
+    console.log(user);
+  }).catch(err=>{
+    console.log(err);
+  });
 });
 
 mongoose
